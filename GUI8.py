@@ -22,6 +22,8 @@ from concurrent.futures import ThreadPoolExecutor  # Parallel processing
 import threading  # Thread synchronization for TTS
 import winsound  # Windows beep sound for recording prompt
 import sys  # System operations and PyInstaller support
+from dotenv import load_dotenv
+load_dotenv()
 
 # Handle PyInstaller bundled environment
 
@@ -59,7 +61,7 @@ except Exception as e:
     else:
         raise RuntimeError("Could not load sentence transformer model")
 
-GEMINI_API_KEY = "AIzaSyBfS_YYa262erJX_q-kwPzRZIJ5tcKGS2w"
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key=GEMINI_API_KEY)
 
 # Define emotions list
@@ -89,7 +91,7 @@ def create_simple_emotion_model():
 # Load models
 def load_models():
     try:
-        model_path = os.path.join(bundle_dir, 'model_file_30epochs.h5') if getattr(sys, 'frozen', False) else r"D:\virtual_interview_simulator\AAA\ALL\emotion_model.h5"
+        model_path = os.path.join(bundle_dir, 'emotion_model.h5')
         
         # If model file doesn't exist, create a simple model
         if not os.path.exists(model_path):
@@ -197,7 +199,7 @@ class InterviewSimulator:
         # Load background image
         self.background_label = None  # Initialize before use
         try:
-            bg_path = os.path.join(bundle_dir, 'anirban.png') if getattr(sys, 'frozen', False) else r"D:\virtual_interview_simulator\AAA\ALL\anirban.png"
+            bg_path = os.path.join(bundle_dir, 'anirban.png')
             self.bg_image = Image.open(bg_path)
             self.bg_image = self.bg_image.resize((self.root.winfo_screenwidth(), 
                                                self.root.winfo_screenheight()), Image.LANCZOS)
